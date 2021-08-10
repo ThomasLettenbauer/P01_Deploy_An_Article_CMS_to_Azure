@@ -69,11 +69,11 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            app.logger.warning("WARNING: Invalid username or password")
+            app.logger.info('********** Invalid username or password **********')
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
-        app.logger.warning("WARNING: " + user.username + " logged in successfully.")
+        app.logger.info('********** ' + user.username + ' logged in successfully. **********')
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
@@ -97,14 +97,14 @@ def authorized():
             scopes=Config.SCOPE,
             redirect_uri=url_for('authorized', _external=True, _scheme='https'))
         if "error" in result:
-            app.logger.warning("WARNING: MS Login - Invalid login attempt")
+            app.logger.info('********** MS Login - Invalid login attempt **********')
             return render_template("auth_error.html", result=result)
         session["user"] = result.get("id_token_claims")
         # Note: In a real app, we'd use the 'name' property from session["user"] below
         # Here, we'll use the admin username for anyone who is authenticated by MS
         user = User.query.filter_by(username="admin").first()
         login_user(user)
-        app.logger.warning("WARNING: MS Login - " + user.username + " logged in successfully.")
+        app.logger.info('********** MS Login - " + user.username + " logged in successfully. **********')
         _save_cache(cache)
     return redirect(url_for('home'))
 
