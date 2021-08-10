@@ -1,7 +1,7 @@
 """
 This script runs the FlaskWebProject application using a development server.
 """
-
+import sys
 from os import environ
 import logging
 from FlaskWebProject import app
@@ -14,7 +14,7 @@ if __name__ == '__main__':
         PORT = 5555
 
     app.logger.setLevel(logging.WARNING)
-    streamHandler = logging.StreamHandler()
+    streamHandler = logging.StreamHandler(stream=sys.stdout)
     streamHandler.setLevel(logging.WARNING)
     app.logger.addHandler(streamHandler)
 
